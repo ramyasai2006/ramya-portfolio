@@ -3,11 +3,15 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Serve frontend files
+app.use(express.static(path.join(__dirname, "..")));
 
 // MongoDB Connection
 mongoose
@@ -37,39 +41,34 @@ const ContactSchema = new mongoose.Schema({
 
 const Contact = mongoose.model("Contact", ContactSchema);
 
-// Test Route
+// Home Route - Serve Portfolio
 app.get("/", (req, res) => {
-  res.send("Backend Working ✅");
+  res.sendFile(path.join(__dirname, "..", "index.html"));
 });
 
 // Contact API
 app.post("/contact", async (req, res) => {
+  console.log("Request Body:", req.body);
 
-    console.log("Request Body:", req.body);
+  try {
+    const data = new Contact(req.body);
 
-    try {
+    await data.save();
 
-        const data = new Contact(req.body);
+    console.log("✅ Saved Successfully");
 
-        await data.save();
+    res.json({
+      success: true,
+      message: "Message saved successfully",
+    });
+  } catch (error) {
+    console.error(error);
 
-        console.log("Saved Successfully");
-
-        res.json({
-            message: "Message saved successfully"
-        });
-
-    } catch (error) {
-
-        console.error("Full Error:");
-        console.error(error);
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 // Start Server
