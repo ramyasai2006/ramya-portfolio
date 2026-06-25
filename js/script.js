@@ -17,7 +17,7 @@ if (form) {
 
         try {
 
-            const result = await fetch("http://localhost:5000/contact", {
+            const result = await fetch("/contact", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
