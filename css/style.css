@@ -905,12 +905,3 @@ box-shadow:0 0 20px #00f5ff;
 
 }
 
-#contact-form {
-    position: relative;
-    z-index: 9999;
-}
-
-#contact-form button {
-    position: relative;
-    z-index: 9999;
-}
